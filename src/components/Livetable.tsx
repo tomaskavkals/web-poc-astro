@@ -66,7 +66,7 @@ const Livetable: FunctionComponent<LivetableProps> = ({ leagues, events }) => {
   const [sortBy, setSortBy] = useState<"league" | "time">("league");
   const groupedEventsIntoLeagues = getGroupedEventsIntoLeagues(events, sortBy);
   const socket = usePartySocket({
-    host: "http://localhost:1999",
+    host: "https://web-poc-partykit.heyho-dev.partykit.dev",
     room: "livko",
     onMessage(event) {
       const message = JSON.parse(event.data);

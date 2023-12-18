@@ -11,7 +11,7 @@ interface AdminProps extends PropsWithChildren {
 
 const Admin: FunctionComponent<AdminProps> = ({ events }) => {
   const socket = usePartySocket({
-    host: "http://localhost:1999",
+    host: "https://web-poc-partykit.heyho-dev.partykit.dev",
     room: "livko",
   });
 
