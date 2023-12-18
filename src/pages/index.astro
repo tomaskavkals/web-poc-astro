@@ -12,10 +12,10 @@ const data = (await response.json()) as {
 };
 ---
 
-<Layout title="Livesport">
+<Layout title="Livesport" leagues={data.leagues}>
   <main>
     <Livetable
-      client:load
+      client:only
       leagues={data.leagues}
       events={data.events.map((event) => ({
         ...event,

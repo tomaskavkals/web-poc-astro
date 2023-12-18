@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useStore } from "@nanostores/react";
 
 import { $events } from "../store/events";
+import MyGamesIcon from "./MyGamesIcon";
 
 import type { FunctionComponent } from "react";
 import type PartySocket from "partysocket";
@@ -26,7 +27,11 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
     events.find((event) => event.id === id)
   );
   const ref = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState<{ startTime: string | null }>({
+  const [state, setState] = useState<{
+    startTime: string | null;
+    isHydrated: boolean;
+  }>({
+    isHydrated: false,
     startTime: null,
   });
   const liveData = useStore($rowStore);
@@ -43,6 +48,7 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
         }
 
         setState({
+          isHydrated: true,
           startTime: startTime.toLocaleTimeString("cs").replace(/:00$/, ""),
         });
 
@@ -60,6 +66,9 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
   return (
     <div ref={ref} className="flex flex-row">
       <div className="w-1/12 text-center">
+        {state.isHydrated && <MyGamesIcon id={id} />}
+      </div>
+      <div className="w-1/12 text-center">
         {liveData && liveData.time > 0 ? (
           <strong className="text-red-500">{liveData.time}'</strong>
         ) : (
@@ -70,7 +79,7 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
         <strong>{home}</strong> - <strong>{away}</strong>
       </h3>
       {liveData && (
-        <div className="w-6/12">
+        <div className="w-5/12">
           {liveData.homeGoals} - {liveData.awayGoals}
         </div>
       )}

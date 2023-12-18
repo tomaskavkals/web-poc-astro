@@ -1,12 +1,16 @@
 import usePartySocket from "partysocket/react";
 import { useState } from "react";
 
+import { useStore } from "@nanostores/react";
+
 import { $events } from "../store/events";
+import $pinnedLeagues from "../store/pinnedLeagues";
 import EventRow from "./EventRow";
+import LeagueHeader from "./LeagueHeader";
 
 import type { EventRowType } from "./EventRow";
 
-import type { FunctionComponent, PropsWithChildren } from "react";
+import type { FunctionComponent } from "react";
 export type LeagueType = {
   id: number;
   name: string;
@@ -21,11 +25,11 @@ type LivetableProps = {
 
 const getGroupedEventsIntoLeagues = (
   events: EventRowType[],
+  pinned: Set<number>,
   sortBy: "league" | "time"
 ) => {
-  const leagues: Record<string, EventRowType[]> = {};
-
   if (sortBy === "time") {
+    const leagues: Map<string, EventRowType[]> = new Map();
     const sortedEventsByTime = [...events].sort(
       (a, b) => a.startTime.getTime() - b.startTime.getTime()
     );
@@ -33,38 +37,50 @@ const getGroupedEventsIntoLeagues = (
     sortedEventsByTime.forEach((event) => {
       const leagueKey = `${event.leagueId}-${event.startTime.getTime()}`;
 
-      if (typeof leagues[leagueKey] === "undefined") {
-        leagues[leagueKey] = [];
+      if (!leagues.has(leagueKey)) {
+        leagues.set(leagueKey, []);
       }
 
-      leagues[leagueKey].push(event);
+      leagues.get(leagueKey)?.push(event);
     });
 
     return leagues;
   }
 
+  const pinnedLeagues: Map<number, EventRowType[]> = new Map();
+  const leagues: Map<number, EventRowType[]> = new Map();
+
   events.forEach((event) => {
     const leagueKey = event.leagueId;
 
-    if (typeof leagues[leagueKey] === "undefined") {
-      leagues[leagueKey] = [];
+    const category = pinned.has(leagueKey) ? pinnedLeagues : leagues;
+
+    if (!category.has(leagueKey)) {
+      category.set(leagueKey, []);
     }
 
-    leagues[leagueKey].push(event);
+    category.get(leagueKey)?.push(event);
   });
 
-  Object.keys(leagues).forEach((leagueId) => {
-    leagues[leagueId].sort(
-      (a, b) => a.startTime.getTime() - b.startTime.getTime()
-    );
+  const finalLeagues = new Map([...pinnedLeagues, ...leagues]);
+
+  [...finalLeagues.keys()].forEach((leagueId) => {
+    finalLeagues
+      .get(Number(leagueId))
+      ?.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   });
 
-  return leagues;
+  return finalLeagues;
 };
 
 const Livetable: FunctionComponent<LivetableProps> = ({ leagues, events }) => {
   const [sortBy, setSortBy] = useState<"league" | "time">("league");
-  const groupedEventsIntoLeagues = getGroupedEventsIntoLeagues(events, sortBy);
+  const pinnedLeagues = useStore($pinnedLeagues);
+  const groupedEventsIntoLeagues = getGroupedEventsIntoLeagues(
+    events,
+    pinnedLeagues,
+    sortBy
+  );
   const socket = usePartySocket({
     host: "https://web-poc-partykit.heyho-dev.partykit.dev",
     room: "livko",
@@ -91,22 +107,27 @@ const Livetable: FunctionComponent<LivetableProps> = ({ leagues, events }) => {
       >
         Sort by {sortBy === "league" ? "time" : "league"}
       </button>
-      {Object.keys(groupedEventsIntoLeagues).map((leagueId) => (
-        <div key={leagueId} className="bg-white rounded-lg px-4 py-2 shadow-sm">
-          <h2 className="text-lg font-bold mb-4 border-b-[1px] pb-2 border-gray-200">
-            {
-              leagues.find(
-                (l) => l.id === groupedEventsIntoLeagues[leagueId][0].leagueId
-              )?.name
-            }
-          </h2>
-          <div className="flex flex-col gap-y-2">
-            {groupedEventsIntoLeagues[leagueId].map((event) => (
-              <EventRow key={event.id} {...event} socket={socket} />
-            ))}
+      {[...groupedEventsIntoLeagues.keys()].map((leagueKey) => {
+        const league = groupedEventsIntoLeagues.get(leagueKey);
+
+        if (!league) {
+          return null;
+        }
+
+        return (
+          <div
+            key={`${leagueKey}-${sortBy}`}
+            className="bg-white rounded-lg px-4 py-2 shadow-sm"
+          >
+            <LeagueHeader id={league[0].leagueId} leagues={leagues} />
+            <div className="flex flex-col gap-y-2">
+              {league.map((event) => (
+                <EventRow key={event.id} {...event} socket={socket} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
