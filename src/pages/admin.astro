@@ -14,6 +14,6 @@ const data = (await response.json()) as {
 
 <Layout title="Livesport">
   <main>
-    <AdminView events={data.events} />
+    <AdminView events={data.events} client:load />
   </main>
 </Layout>
