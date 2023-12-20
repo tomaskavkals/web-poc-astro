@@ -1,3 +1,4 @@
+import Cookie from "js-cookie";
 import { computed } from "nanostores";
 
 import { useStore } from "@nanostores/react";
@@ -21,6 +22,10 @@ const PinnedLeaguesIcon = ({ id }: PinnedLeaguesIconProps) => {
         isPinnedLeagues ? "opacity-100" : "opacity-25"
       }`}
       onClick={() => {
+        Cookie.set("personalized-view", "1", {
+          expires: 365,
+        });
+
         const pinnedLeagues = $pinnedLeagues.get();
 
         if (pinnedLeagues.has(id)) {

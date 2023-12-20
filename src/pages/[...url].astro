@@ -1,0 +1,42 @@
+---
+import IndexPage from "../routes/index.astro";
+import ArticlePage from "../routes/article.astro";
+
+const { url } = Astro.params;
+
+const response = await fetch("https://web-poc-astro.vercel.app/api/routing");
+const data = (await response.json()) as Record<string, string>;
+let page: string | undefined = undefined;
+
+if (typeof url !== "undefined") {
+  const regexp = Object.keys(data)
+    .map((key) => {
+      return `(?<${key}>${data[key]})`;
+    })
+    .join("|");
+
+  const result = new RegExp(regexp).exec(url);
+
+  if (result === null) {
+    return null;
+  }
+
+  page = Object.keys(data).find(
+    (key) => Boolean(result.groups?.[key]) === true
+  );
+}
+
+let Page;
+
+switch (page) {
+  case "article":
+    Page = ArticlePage;
+    break;
+
+  default:
+    Page = IndexPage;
+    break;
+}
+---
+
+<Page />

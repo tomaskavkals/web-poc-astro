@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Livetable from "../components/Livetable";
+
+import type { EventRowType } from "../components/EventRow";
+import type { LeagueType } from "../components/Livetable";
+
+const response = await fetch("https://web-poc-astro.vercel.app/api/soccer");
+const data = (await response.json()) as {
+  events: EventRowType[];
+  leagues: LeagueType[];
+};
+
+const hasPersonalizedView = Boolean(Astro.cookies.get("personalized-view"));
+---
+
+<Layout title="Livesport" leagues={data.leagues}>
+  <main>
+    Rendered by {hasPersonalizedView ? "Client" : "SSR"}
+    {
+      hasPersonalizedView ? (
+        <Livetable
+          client:only
+          leagues={data.leagues}
+          events={data.events.map((event) => ({
+            ...event,
+            startTime: new Date(event.startTime),
+          }))}
+        />
+      ) : (
+        <Livetable
+          client:load
+          leagues={data.leagues}
+          events={data.events.map((event) => ({
+            ...event,
+            startTime: new Date(event.startTime),
+          }))}
+        />
+      )
+    }
+  </main>
+</Layout>

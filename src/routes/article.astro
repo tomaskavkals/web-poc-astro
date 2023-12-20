@@ -1,0 +1,34 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Livetable from "../components/Livetable";
+import BBCodeParser from "../components/bbCode/BBCodeParser";
+import Widget from "../components/Widget";
+
+import type { EventRowType } from "../components/EventRow";
+import type { LeagueType } from "../components/Livetable";
+
+const response = await fetch("https://web-poc-astro.vercel.app/api/article");
+const data = (await response.json()) as {
+  id: string;
+  title: string;
+  perex: string;
+  content: string;
+};
+const parser = new BBCodeParser();
+  
+const content = parser.parse(data.content);
+---
+
+<Layout title={`${data.title} | Livesport`}>
+  <main>
+    <h1 class="mb-6 text-3xl">{data.title}</h1>
+    <p class="mb-6 text-lg font-bold">{data.perex}</p>
+    {content.map((item) => {
+      if (item.type === "p") {
+        return <p class="mb-6">{item.props.children}</p>;
+      } else if (item.type === "image") {
+        return <Widget client:visible />;
+      }
+    })
+  </main>
+</Layout>
