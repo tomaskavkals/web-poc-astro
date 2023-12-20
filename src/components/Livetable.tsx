@@ -5,12 +5,12 @@ import { useStore } from "@nanostores/react";
 
 import { $events } from "../store/events";
 import $pinnedLeagues from "../store/pinnedLeagues";
-import EventRow from "./EventRow";
-import LeagueHeader from "./LeagueHeader";
+import League from "./League";
 
 import type { EventRowType } from "./EventRow";
 
 import type { FunctionComponent } from "react";
+
 export type LeagueType = {
   id: number;
   name: string;
@@ -108,24 +108,26 @@ const Livetable: FunctionComponent<LivetableProps> = ({ leagues, events }) => {
         Sort by {sortBy === "league" ? "time" : "league"}
       </button>
       {[...groupedEventsIntoLeagues.keys()].map((leagueKey) => {
-        const league = groupedEventsIntoLeagues.get(leagueKey);
+        const leagueEvents = groupedEventsIntoLeagues.get(leagueKey);
+
+        if (!leagueEvents) {
+          return null;
+        }
+
+        const league = leagues.find((l) => l.id === leagueEvents[0].leagueId);
 
         if (!league) {
           return null;
         }
 
         return (
-          <div
-            key={`${leagueKey}-${sortBy}`}
-            className="bg-white rounded-lg px-4 py-2 shadow-sm"
-          >
-            <LeagueHeader id={league[0].leagueId} leagues={leagues} />
-            <div className="flex flex-col gap-y-2">
-              {league.map((event) => (
-                <EventRow key={event.id} {...event} socket={socket} />
-              ))}
-            </div>
-          </div>
+          <League
+            events={leagueEvents}
+            sortBy={sortBy}
+            socket={socket}
+            leagueKey={leagueKey}
+            {...league}
+          />
         );
       })}
     </div>
