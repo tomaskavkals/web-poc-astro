@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const now = new Date();
+---
+
+<Layout title="Livesport">
+  <main>
+    <div>now.toLocaleTimeString(): {now.toLocaleTimeString()}</div>
+    <div>now.toLocaleTimeString('cs'): {now.toLocaleTimeString("cs")}</div>
+    <div>now.toTimeString(): {now.toTimeString()}</div>
+  </main>
+</Layout>
