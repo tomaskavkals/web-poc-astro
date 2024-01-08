@@ -1,8 +1,6 @@
 ---
-import IndexPage from "../routes/index.astro";
-import MatchPage from "../routes/match.astro";
-import ArticlePage from "../routes/article.astro";
-
+import type { Code } from "astro:components";
+import getMatchProps from "../routes/getMatchProps";
 const { url } = Astro.params;
 
 const response = await fetch("https://web-poc-astro.vercel.app/api/routing");
@@ -27,21 +25,36 @@ if (typeof url !== "undefined") {
   );
 }
 
+const importDynamically = async (path: string) => {
+  const page = await import(path);
+
+  return page.default;
+};
+
 let Page;
+let props = {};
 
 switch (page) {
   case "match":
-    Page = MatchPage;
+    Page = await importDynamically("../routes/match.astro");
+    props = await getMatchProps(Astro.params.url);
+
+    if (!props.event || !props.league) {
+      return new Response("404", {
+        status: 404,
+        statusText: "Not Found",
+      });
+    }
     break;
 
   case "article":
-    Page = ArticlePage;
+    Page = await importDynamically("../routes/article.astro");
     break;
 
   default:
-    Page = IndexPage;
+    Page = await importDynamically("../routes/index.astro");
     break;
 }
 ---
 
-<Page />
+<Page {...props} />

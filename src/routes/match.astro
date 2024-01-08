@@ -1,46 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import DetailRouter from "../components/detail/DetailRouter";
-import type { LeagueType } from "../components/Livetable";
-import type { EventRowType } from "../components/EventRow";
 
-const response = await fetch("https://web-poc-astro.vercel.app/api/soccer");
-const data = (await response.json()) as {
-  events: EventRowType[];
-  leagues: LeagueType[];
-};
-
-const getPathParts = (url?: string) => {
-  const idMatches = url?.match(/(?<basePath>zapas\/(?<id>\d+))\/?(?<rest>.*)/);
-
-  if (idMatches && idMatches.groups?.id && idMatches.groups?.basePath) {
-    return {
-      id: idMatches.groups.id,
-      basePath: idMatches.groups.basePath,
-      rest: idMatches.groups.rest.length ? idMatches.groups.rest : null,
-    };
-  }
-
-  return { id: null, basePath: null, rest: null };
-};
-
-const { id, basePath, rest } = getPathParts(Astro.params.url);
-
-const event = data.events.find((e) => e.id === Number(id));
-
-const league = data.leagues.find((l) => l.id === event?.leagueId);
-
-if (!event || !league) {
-  return new Response("404", {
-    status: 404,
-    statusText: "Not Found",
-  });
-}
+const { event, doNotIndex, basePath } = Astro.props;
 ---
 
 <Layout
   title={`${event.home} - ${event.away} | Livesport`}
-  doNotIndex={rest !== null}
+  doNotIndex={doNotIndex}
 >
   <main>
     {event.home} - {event.away}
