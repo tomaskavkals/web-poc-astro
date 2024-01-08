@@ -13,19 +13,19 @@ const DetailRouter = ({ basePath }: { basePath: string }) => {
       <>
         <div className="flex gap-2 p-2">
           <Link
-            to=""
+            to={basePath}
             className="px-4 py-2 text-base text-gray-900 bg-gray-200 border-2 border-gray-300 border-solid rounded-md"
           >
             Summary
           </Link>
           <Link
-            to="h2h"
+            to={`${basePath}/h2h`}
             className="px-4 py-2 text-base text-gray-900 bg-gray-200 border-2 border-gray-300 border-solid rounded-md"
           >
             H2H
           </Link>
           <Link
-            to="odds"
+            to={`${basePath}/odds`}
             className="px-4 py-2 text-base text-gray-900 bg-gray-200 border-2 border-gray-300 border-solid rounded-md"
           >
             Odds
@@ -36,6 +36,8 @@ const DetailRouter = ({ basePath }: { basePath: string }) => {
       </>
     ),
   });
+
+  console.log("basePath", basePath);
 
   const summaryRoute = new Route({
     getParentRoute: () => rootRoute,

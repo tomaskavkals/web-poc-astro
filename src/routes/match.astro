@@ -34,6 +34,6 @@ if (!event || !league) {
 <Layout title={`${event.home} - ${event.away} | Livesport`}>
   <main>
     {event.home} - {event.away}
-    {basePath && <DetailRouter basePath={basePath} client:load />}
+    {basePath && <DetailRouter basePath={`/${basePath}`} client:load />}
   </main>
 </Layout>
