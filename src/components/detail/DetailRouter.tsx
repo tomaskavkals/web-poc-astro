@@ -37,8 +37,6 @@ const DetailRouter = ({ basePath }: { basePath: string }) => {
     ),
   });
 
-  console.log("basePath", basePath);
-
   const summaryRoute = new Route({
     getParentRoute: () => rootRoute,
     path: `${basePath}/`,

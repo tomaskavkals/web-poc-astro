@@ -10,28 +10,38 @@ const data = (await response.json()) as {
   leagues: LeagueType[];
 };
 
-const getIdAndBasePath = (url?: string) => {
-  const idMatches = url?.match(/(?<basePath>zapas\/(?<id>\d+))/);
+const getPathParts = (url?: string) => {
+  const idMatches = url?.match(/(?<basePath>zapas\/(?<id>\d+))\/?(?<rest>.*)/);
 
   if (idMatches && idMatches.groups?.id && idMatches.groups?.basePath) {
-    return { id: idMatches.groups.id, basePath: idMatches.groups.basePath };
+    return {
+      id: idMatches.groups.id,
+      basePath: idMatches.groups.basePath,
+      rest: idMatches.groups.rest.length ? idMatches.groups.rest : null,
+    };
   }
 
-  return { id: null, basePath: null };
+  return { id: null, basePath: null, rest: null };
 };
 
-const { id, basePath } = getIdAndBasePath(Astro.params.url);
+const { id, basePath, rest } = getPathParts(Astro.params.url);
 
 const event = data.events.find((e) => e.id === Number(id));
 
 const league = data.leagues.find((l) => l.id === event?.leagueId);
 
 if (!event || !league) {
-  return Astro.redirect("/404");
+  return new Response("404", {
+    status: 404,
+    statusText: "Not Found",
+  });
 }
 ---
 
-<Layout title={`${event.home} - ${event.away} | Livesport`}>
+<Layout
+  title={`${event.home} - ${event.away} | Livesport`}
+  doNotIndex={rest !== null}
+>
   <main>
     {event.home} - {event.away}
     {basePath && <DetailRouter basePath={`/${basePath}`} client:load />}
