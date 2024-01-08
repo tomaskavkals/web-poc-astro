@@ -1,0 +1,39 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DetailRouter from "../components/detail/DetailRouter";
+import type { LeagueType } from "../components/Livetable";
+import type { EventRowType } from "../components/EventRow";
+
+const response = await fetch("https://web-poc-astro.vercel.app/api/soccer");
+const data = (await response.json()) as {
+  events: EventRowType[];
+  leagues: LeagueType[];
+};
+
+const getIdAndBasePath = (url?: string) => {
+  const idMatches = url?.match(/(?<basePath>zapas\/(?<id>\d+))/);
+
+  if (idMatches && idMatches.groups?.id && idMatches.groups?.basePath) {
+    return { id: idMatches.groups.id, basePath: idMatches.groups.basePath };
+  }
+
+  return { id: null, basePath: null };
+};
+
+const { id, basePath } = getIdAndBasePath(Astro.params.url);
+
+const event = data.events.find((e) => e.id === Number(id));
+
+const league = data.leagues.find((l) => l.id === event?.leagueId);
+
+if (!event || !league) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`${event.home} - ${event.away} | Livesport`}>
+  <main>
+    {event.home} - {event.away}
+    {basePath && <DetailRouter basePath={basePath} client:load />}
+  </main>
+</Layout>

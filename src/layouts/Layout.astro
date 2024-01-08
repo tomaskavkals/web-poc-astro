@@ -2,13 +2,15 @@
 import MyGamesCounter from "../components/MyGamesCounter";
 import PinnedLeagues from "../components/PinnedLeagues";
 import type { LeagueType } from "../components/Livetable";
+import classNames from "classnames";
 
 interface Props {
   title: string;
   leagues?: LeagueType[];
+  isNews?: boolean;
 }
 
-const { title, leagues } = Astro.props;
+const { title, leagues, isNews } = Astro.props;
 ---
 
 <!doctype html>
@@ -25,7 +27,7 @@ const { title, leagues } = Astro.props;
     <header
       class="bg-[#001e28] w-full h-[88px] flex items-center justify-start"
     >
-      <div class="w-full max-w-[1188px] mx-auto">
+      <div class="w-full max-w-[1188px] mx-auto flex flex-row gap-x-10">
         <svg
           class="w-[225px] h-[32px]"
           preserveAspectRatio="xMinYMid meet"
@@ -68,6 +70,22 @@ const { title, leagues } = Astro.props;
             ></path></g
           ><path d="m73.3 0-19.2 41.2 83.1-41.2z" fill="#ff0046"></path></svg
         >
+        <div class="flex flex-row h-full font-bold text-white gap-x-14">
+          <a
+            href="/"
+            class={classNames(
+              "h-full border-b-4",
+              isNews ? "border-transparent" : "border-white"
+            )}>Scores</a
+          >
+          <a
+            href="/zpravy/"
+            class={classNames(
+              "h-full border-b-4",
+              !isNews ? "border-transparent" : "border-white"
+            )}>News</a
+          >
+        </div>
       </div>
     </header>
     <nav

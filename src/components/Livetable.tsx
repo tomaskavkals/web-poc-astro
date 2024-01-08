@@ -1,3 +1,4 @@
+import Cookie from "js-cookie";
 import usePartySocket from "partysocket/react";
 import { useState } from "react";
 
@@ -102,8 +103,13 @@ const Livetable: FunctionComponent<LivetableProps> = ({ leagues, events }) => {
   return (
     <div className="flex flex-col gap-y-4">
       <button
-        className="bg-gray-900 text-white px-4 py-2 rounded-md shadow-md mr-auto"
-        onClick={() => setSortBy(sortBy === "league" ? "time" : "league")}
+        className="px-4 py-2 mr-auto text-white bg-gray-900 rounded-md shadow-md"
+        onClick={() => {
+          Cookie.set("personalized-view", "1", {
+            expires: 365,
+          });
+          setSortBy(sortBy === "league" ? "time" : "league");
+        }}
       >
         Sort by {sortBy === "league" ? "time" : "league"}
       </button>
@@ -126,6 +132,7 @@ const Livetable: FunctionComponent<LivetableProps> = ({ leagues, events }) => {
             sortBy={sortBy}
             socket={socket}
             leagueKey={leagueKey}
+            key={leagueKey}
             {...league}
           />
         );

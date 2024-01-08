@@ -26,7 +26,7 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
   const $rowStore = computed($events, (events) =>
     events.find((event) => event.id === id)
   );
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLAnchorElement>(null);
   const [state, setState] = useState<{
     startTime: string | null;
     isHydrated: boolean;
@@ -64,7 +64,7 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
   }, []);
 
   return (
-    <div ref={ref} className="flex flex-row">
+    <a href={`/zapas/${id}`} ref={ref} className="flex flex-row">
       <div className="w-1/12 text-center">
         {state.isHydrated && <MyGamesIcon id={id} />}
       </div>
@@ -83,7 +83,7 @@ const EventRow: FunctionComponent<EventRowType & { socket: PartySocket }> = ({
           {liveData.homeGoals} - {liveData.awayGoals}
         </div>
       )}
-    </div>
+    </a>
   );
 };
 

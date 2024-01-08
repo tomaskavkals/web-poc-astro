@@ -1,5 +1,6 @@
 ---
 import IndexPage from "../routes/index.astro";
+import MatchPage from "../routes/match.astro";
 import ArticlePage from "../routes/article.astro";
 
 const { url } = Astro.params;
@@ -29,6 +30,10 @@ if (typeof url !== "undefined") {
 let Page;
 
 switch (page) {
+  case "match":
+    Page = MatchPage;
+    break;
+
   case "article":
     Page = ArticlePage;
     break;

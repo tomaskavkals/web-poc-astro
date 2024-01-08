@@ -1,7 +1,7 @@
 export async function GET() {
   return new Response(
     JSON.stringify({
-      article: "clanek/.*",
+      article: "zpravy/.*",
       match: "zapas/.*",
     })
   );
