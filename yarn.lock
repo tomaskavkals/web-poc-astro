@@ -319,7 +319,7 @@
     "@babel/plugin-syntax-jsx" "^7.23.3"
     "@babel/types" "^7.23.4"
 
-"@babel/runtime@^7.16.7":
+"@babel/runtime@^7.16.7", "@babel/runtime@^7.21.0":
   version "7.23.8"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.8.tgz#8ee6fe1ac47add7122902f257b8ddf55c898f650"
   integrity sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==
@@ -645,7 +645,25 @@
   resolved "https://registry.yarnpkg.com/@tanstack/history/-/history-1.1.12.tgz#d6ef4dbec5497342c95a44affdf332ef8b1a961b"
   integrity sha512-71B5jgebkHsbrpiDReCydrfvfiri0dl5mF6vs1mRXLFajsMzYd/JJvOKTqJrVBDvOMosreR58v8HTnRoFJ0LYQ==
 
-"@tanstack/react-router@^1.1.12":
+"@tanstack/react-cross-context@^1.1.12":
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-cross-context/-/react-cross-context-1.1.12.tgz#1a94aa3b30d12504b3f7d86b9499021439b833aa"
+  integrity sha512-0lKKi2w0hZCCA3O+NBaXunhTfgdd/kBzS9F8AjC90BEHYL/Gb/nxTZTy7H9lcBS8YoSeUQCELiWWwzYxRj1MWQ==
+
+"@tanstack/react-router-server@^1.1.12":
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-router-server/-/react-router-server-1.1.12.tgz#d6f94565ead8484c9568d750e6560572de3bdfe6"
+  integrity sha512-Mm2mtL4Z6W2yzBXrb6IGRzRatmXeoO7qWIXds/J2EuZ4qseKFQktghGiDGh5UUc5VwTG5vO4q0tmzdFnonRiOA==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
+    "@tanstack/react-cross-context" "^1.1.12"
+    "@tanstack/react-router" "1.1.12"
+    isbot "^3.6.6"
+    jsesc "^3.0.2"
+    tiny-invariant "^1.3.1"
+    tiny-warning "^1.0.3"
+
+"@tanstack/react-router@1.1.12", "@tanstack/react-router@^1.1.12":
   version "1.1.12"
   resolved "https://registry.yarnpkg.com/@tanstack/react-router/-/react-router-1.1.12.tgz#ef97af0060060b39fcff6f98b1915a8d5ae62a01"
   integrity sha512-6E+lHUs4pib4jQwRcf7JyLm+QB+GRLV2P1lA1dVT5qIZ1P25IJ5CvqEotNqKfd4tidH3IYrQUORfXOplEPWFnw==
@@ -2124,6 +2142,11 @@ is-wsl@^3.0.0:
   dependencies:
     is-inside-container "^1.0.0"
 
+isbot@^3.6.6:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/isbot/-/isbot-3.8.0.tgz#b1f8e3d19aca0961b5ed27b62bb8bb0a275781e4"
+  integrity sha512-vne1mzQUTR+qsMLeCBL9+/tgnDXRyc2pygLGl/WsgA+EZKIiB5Ehu0CiVTHIIk30zhJ24uGz4M5Ppse37aR0Hg==
+
 isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
@@ -2163,6 +2186,11 @@ jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
+
+jsesc@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-3.0.2.tgz#bb8b09a6597ba426425f2e4a07245c3d00b9343e"
+  integrity sha512-xKqzzWXDttJuOcawBt4KnKHHIf5oQ/Cxax+0PWFG+DFDgHNAdi+TXECADI+RYiFUMmx8792xsMbbgXj4CwnP4g==
 
 json5@^2.2.3:
   version "2.2.3"

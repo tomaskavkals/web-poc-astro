@@ -17,6 +17,7 @@
     "@nanostores/persistent": "^0.9.1",
     "@nanostores/react": "^0.7.1",
     "@tanstack/react-router": "^1.1.12",
+    "@tanstack/react-router-server": "^1.1.12",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
     "astro": "^4.0.5",
