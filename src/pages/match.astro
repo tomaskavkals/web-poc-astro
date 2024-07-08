@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DetailRouter from "../components/detail/DetailRouter";
+
+const { event, doNotIndex, basePath } = Astro.props;
+---
+
+<Layout
+  title={`${event.home} - ${event.away} | Livesport`}
+  doNotIndex={doNotIndex}
+>
+  <main>
+    {event.home} - {event.away}
+    {basePath && <DetailRouter basePath={`/${basePath}`} client:load />}
+  </main>
+</Layout>
