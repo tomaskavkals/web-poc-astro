@@ -20,7 +20,7 @@
     "@tanstack/react-router-server": "^1.1.12",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
-    "astro": "^4.0.5",
+    "astro": "^4.11.5",
     "classnames": "^2.3.2",
     "js-cookie": "^3.0.5",
     "nanostores": "^0.9.5",
